@@ -12,9 +12,11 @@ export type Database = {
       instances: {
         Row: {
           audiobook_url: string | null
+          conversational_agent_id: string
           created_at: string
           description: string | null
           id: number
+          knowledge_base_id: string
           name: string
           podcast_url: string | null
           sources: string
@@ -23,9 +25,11 @@ export type Database = {
         }
         Insert: {
           audiobook_url?: string | null
+          conversational_agent_id: string
           created_at?: string
           description?: string | null
           id?: number
+          knowledge_base_id: string
           name: string
           podcast_url?: string | null
           sources: string
@@ -34,9 +38,11 @@ export type Database = {
         }
         Update: {
           audiobook_url?: string | null
+          conversational_agent_id?: string
           created_at?: string
           description?: string | null
           id?: number
+          knowledge_base_id?: string
           name?: string
           podcast_url?: string | null
           sources?: string

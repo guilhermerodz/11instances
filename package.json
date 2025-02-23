@@ -10,6 +10,7 @@
     "db:types": "npx supabase gen types typescript --project-id \"clfcnbalnnfjvomviqtb\" --schema public > database.types.ts"
   },
   "dependencies": {
+    "@11labs/react": "^0.0.7",
     "@hookform/resolvers": "^4.1.1",
     "@icons-pack/react-simple-icons": "^12.0.0",
     "@radix-ui/react-label": "^2.1.2",
@@ -19,6 +20,7 @@
     "add": "^2.0.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "elevenlabs": "^1.51.0",
     "lucide-react": "^0.475.0",
     "next": "15.1.7",
     "next-auth": "^4.24.11",
@@ -27,6 +29,7 @@
     "react-hook-form": "^7.54.2",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
+    "youtube-transcript": "^1.2.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {

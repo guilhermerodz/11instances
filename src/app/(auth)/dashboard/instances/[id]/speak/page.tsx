@@ -3,6 +3,8 @@ import { createClient } from "@/server/supabase";
 import Link from "next/link";
 import { SignoutButton } from "../../../signout-button";
 import { ChevronLeftIcon } from "lucide-react";
+import { ElevenLabsClient } from "elevenlabs";
+import { Conversational } from "./conversational";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -12,9 +14,17 @@ export default async function Page({ params }: { params: { id: string } }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: instance, error } = await supabase.from("instances").select("*").eq("id", id as any).limit(1).single();
 
+  const elevenLabs = new ElevenLabsClient({
+    apiKey: process.env.ELEVENLABS_API_KEY!,
+  });
+
   if (error) {
     return <>Error loading instance: {error.message}</>
   }
+
+  const signedUrl = await elevenLabs.conversationalAi.getSignedUrl({
+    agent_id: instance.conversational_agent_id,
+  });
 
   const found = instance !== null;
 
@@ -43,7 +53,9 @@ export default async function Page({ params }: { params: { id: string } }) {
             ))}
           </div> */}
 
-            <p className="text-2xl font-semibold tracking-tight text-center text-balance w-full">Speak to me</p>
+            <p className="text-2xl font-semibold tracking-tight text-center text-balance w-full">{instance.name}</p>
+
+            <Conversational signedUrl={signedUrl} />
           </>}
         </main>
       </div>

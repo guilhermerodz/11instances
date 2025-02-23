@@ -13,8 +13,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createInstance } from "./action";
 import { createInstanceSchema } from "@/lib/schemas/create-instance";
 import { INSTANCE_SOURCES_SEPARATOR } from "@/lib/constants";
+import { useFormStatus } from "react-dom";
 
 export default function Page() {
+  const { pending } = useFormStatus();
+  
   const form = useForm<z.infer<typeof createInstanceSchema>>({
     resolver: zodResolver(createInstanceSchema),
     defaultValues: {
@@ -31,6 +34,26 @@ export default function Page() {
 
   const onSubmit = async (formData: FormData) => {
     const sources = form.getValues('sources').map(s => s.url).join(INSTANCE_SOURCES_SEPARATOR);
+    
+    // Validate YouTube URL
+    try {
+      const url = new URL(sources);
+      const isYouTube = url.hostname === 'youtu.be' || url.hostname.includes('youtube.com');
+      if (!isYouTube) {
+        form.setError('sources.0.url', {
+          type: 'manual',
+          message: 'Please enter a valid YouTube video URL'
+        });
+        return;
+      }
+    } catch (e) {
+      form.setError('sources.0.url', {
+        type: 'manual', 
+        message: 'Please enter a valid URL'
+      });
+      return;
+    }
+
     formData.set('sources', sources);
     await createInstance(formData);
   }
@@ -47,7 +70,7 @@ export default function Page() {
           <form action={onSubmit} className="flex-1 flex flex-col mt-8">
             <Link href="/dashboard" className="text-sm text-muted-foreground flex items-center gap-1"> <ChevronLeftIcon className="size-4" /> Back to instances</Link>
             <h3 className="text-2xl font-semibold mb-2 flex gap-2 items-center">Make your instance</h3>
-            
+
             <div className="space-y-4 mt-4">
               <FormField
                 control={form.control}
@@ -78,7 +101,7 @@ export default function Page() {
               />
 
               <div>
-                <FormLabel>Sources</FormLabel>
+                <FormLabel>YT video</FormLabel>
                 <div className="space-y-2">
                   {fields.map((field, index) => (
                     <FormField
@@ -91,15 +114,15 @@ export default function Page() {
                             <FormControl>
                               <Input placeholder="https://..." {...field} />
                             </FormControl>
-                            <Button 
+                            {fields.length > 1 && <Button
                               type="button"
-                              variant="outline" 
+                              variant="outline"
                               size="icon"
                               onClick={() => remove(index)}
                               disabled={index === 0 && fields.length === 1}
                             >
                               <TrashIcon className="size-4" />
-                            </Button>
+                            </Button>}
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -108,19 +131,20 @@ export default function Page() {
                   ))}
                 </div>
 
-                <Button
+                {fields.length < 1 && <Button
                   type="button"
                   variant="outline"
                   className="mt-2"
+
                   onClick={() => append({ url: "" })}
                 >
                   <PlusIcon className="size-4 mr-2" />
                   Add source
-                </Button>
+                </Button>}
               </div>
 
-              <Button type="submit" className="mt-8">
-                Create instance
+              <Button type="submit" className="mt-8" disabled={pending}>
+                {pending ? 'Creating...' : 'Create instance'}
               </Button>
             </div>
           </form>
