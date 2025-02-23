@@ -10,18 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const instanceSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-  sources: z.array(z.object({
-    url: z.string().url("Must be a valid URL")
-  }))
-})
+import { createInstance } from "./action";
+import { createInstanceSchema } from "@/lib/schemas/create-instance";
+import { INSTANCE_SOURCES_SEPARATOR } from "@/lib/constants";
 
 export default function Page() {
-  const form = useForm<z.infer<typeof instanceSchema>>({
-    resolver: zodResolver(instanceSchema),
+  const form = useForm<z.infer<typeof createInstanceSchema>>({
+    resolver: zodResolver(createInstanceSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -34,6 +29,12 @@ export default function Page() {
     name: "sources"
   });
 
+  const onSubmit = async (formData: FormData) => {
+    const sources = form.getValues('sources').map(s => s.url).join(INSTANCE_SOURCES_SEPARATOR);
+    formData.set('sources', sources);
+    await createInstance(formData);
+  }
+
   return (
     <div className="w-full h-screen">
       <div className="flex flex-col mx-auto w-full p-8 max-w-screen-sm h-full">
@@ -43,7 +44,7 @@ export default function Page() {
         </header>
 
         <Form {...form}>
-          <form className="flex-1 flex flex-col mt-8">
+          <form action={onSubmit} className="flex-1 flex flex-col mt-8">
             <Link href="/dashboard" className="text-sm text-muted-foreground flex items-center gap-1"> <ChevronLeftIcon className="size-4" /> Back to instances</Link>
             <h3 className="text-2xl font-semibold mb-2 flex gap-2 items-center">Make your instance</h3>
             
