@@ -1,0 +1,6 @@
+---
+description: Code best practices
+globs: *.ts, *.tsx
+---
+Code quality:
+- When implementing a solution, prefer writing the simplest syntax and logistics, even if it would take slightly more lines of code when compared to an over-engineered super-advanced nerdy approach. In other words – if a potential solution end being optimized, advanced and fast, keep these qualities while still breaking the code into well-defined separation of concerns. Keep it simple and elegant.

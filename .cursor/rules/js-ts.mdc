@@ -1,0 +1,20 @@
+---
+description: JavaScript/TypeScript best practices
+globs: *.ts, *.tsx
+---
+JavaScript/TypeScript:
+- General imports:
+  - The imports are always at the top of the file.
+  - The import groups are separated by a blank line.
+  - 1st group: the third-party-library imports (example: "react", "next", "zustand", "motion").
+  - 2nd group: the path mappings imports, such as "@/components/button".
+  - 3rd group: the relative locals imports, such as "../file-name.tsx".
+
+TypeScript specific:
+- Use TypeScript for all code; prefer interfaces over types.
+- Avoid enums; use maps instead.
+
+Syntax and Formatting
+- Use the "function" keyword for pure functions.
+- Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+- Use declarative JSX.
