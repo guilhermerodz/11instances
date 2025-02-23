@@ -83,7 +83,7 @@ export async function createInstance(formData: FormData) {
     },
   });
 
-  const { data, error } = await supabase.from("instances").insert({
+  const { error } = await supabase.from("instances").insert({
     name: payload.name,
     description: payload.description ?? null,
     sources: payload.sources,
